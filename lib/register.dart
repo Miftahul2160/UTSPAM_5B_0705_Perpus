@@ -25,10 +25,10 @@ class RegisterPageState extends State<RegisterPage> {
         child: Form(
           key: _globalKey,
           child: Padding(
-            padding: const EdgeInsets.all(18.0),
+            padding: const EdgeInsets.all(24.0),
             child: Center(
               child: SingleChildScrollView(
-                reverse: true,
+                controller: ScrollController(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

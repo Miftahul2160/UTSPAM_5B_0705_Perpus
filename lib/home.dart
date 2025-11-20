@@ -14,18 +14,21 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Icon(Icons.person, size: 30, color: Colors.white), 
-            SizedBox(width: 10),
-            Text('Username', 
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.white,
-              fontWeight: FontWeight.bold
-              )),
-          SizedBox(width: 20)],
+        title: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(Icons.person, size: 30, color: Colors.white), 
+              SizedBox(width: 10),
+              Text('Username', 
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+                fontWeight: FontWeight.bold
+                )),
+            SizedBox(width: 20)],
+          ),
         ),
       ),
       body: LayoutNavigationBarBottom(
