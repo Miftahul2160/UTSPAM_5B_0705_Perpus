@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_library/navbarbottom.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
-}
+  }
 
 class _HomePageState extends State<HomePage> {
   @override
@@ -27,16 +28,11 @@ class _HomePageState extends State<HomePage> {
           SizedBox(width: 20)],
         ),
       ),
-      body: 
-      Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Center(
-          child: Text(
-            'Selamat datang di Halaman Utama!',
-            style: TextStyle(fontSize: 24),
-          ),
-        ),
-      ),
+      body: LayoutNavigationBarBottom(
+        
+      )
+      
     );
   }
 }
+

@@ -1,6 +1,6 @@
 # flutter_library
 
-A new Flutter project.
+Projek flutter membuat aplikasi perpustakaan 
 
 ## Getting Started
 
