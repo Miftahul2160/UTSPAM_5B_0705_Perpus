@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_library/home.dart';
-// import 'package:flutter_library/navbarbottom.dart';
+import 'package:flutter_library/data/db/dbhelper.dart';
 import 'package:flutter_library/register.dart';
 
 class LoginPage extends StatefulWidget {
@@ -14,6 +14,40 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailNIKController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  Future<void> _login() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      String identifier = _emailNIKController.text;
+      String password = _passwordController.text;
+      final user = await DBHelper.instance.authenticate(identifier, password);
+      if (user != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Login Berhasil! Selamat datang, ${user.nama}.'),
+          ),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Login Gagal! Periksa kembali Email/NIK dan Password Anda.',
+            ),
+          ),
+        );
+      }
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +82,10 @@ class _LoginPageState extends State<LoginPage> {
                       controller: _emailNIKController,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       keyboardType: TextInputType.name,
-                      decoration: const InputDecoration(labelText: 'Email/NIK'),
+                      decoration: const InputDecoration(
+                        labelText: 'Email/NIK',
+                        prefixIcon: Icon(Icons.person),
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Masukkan Email/NIK';
@@ -61,7 +98,10 @@ class _LoginPageState extends State<LoginPage> {
                       controller: _passwordController,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       obscureText: true,
-                      decoration: const InputDecoration(labelText: 'Password'),
+                      decoration: const InputDecoration(
+                        labelText: 'Password',
+                        prefixIcon: Icon(Icons.lock),
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Masukkan Password';
@@ -86,18 +126,10 @@ class _LoginPageState extends State<LoginPage> {
                           color: Colors.white,
                         ),
                       ),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // Proses login
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                          );
-                        }
-                        // else (_password) {}
-                        return;
-                      },
-                      child: const Text('Login'),
+                      onPressed: _isLoading ? null : _login,
+                      child: _isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : Text('Login', style: TextStyle(fontSize: 18)),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
