@@ -24,9 +24,9 @@ class RegisterPageState extends State<RegisterPage> {
 
   Future<void> _handleRegister() async {
     if (_globalKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+      // setState(() {
+      //   _isLoading = true;
+      // });
 
       final newUser = User(
         nama: _namaController.text,
@@ -40,11 +40,32 @@ class RegisterPageState extends State<RegisterPage> {
 
       // --- Panggil Fungsi Insert User ke SQFLite ---
       // Asumsikan DBHelper memiliki fungsi `insertUser`
-      final result = await DBHelper.instance.insertUser(newUser);
+      int result = 0;
+      try {
+        result = await DBHelper.instance.insertUser(newUser);
+      } catch (e, st) {
+        // Log exception agar developer bisa melihat penyebabnya di console
+        print('Error saat registrasi: $e');
+        print(st);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Terjadi error saat registrasi. Periksa console.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        // Untuk debugging lokal, tampilkan semua user yang ada
+        try {
+          final users = await DBHelper.instance.getAllUsers();
+          for (var u in users) {
+            print('EXISTING USER - nama:${u.nama}, email:${u.email}, nik:${u.nik}, username:${u.username}');
+          }
+        } catch (_) {}
+        return;
+      }
 
-      setState(() {
-        _isLoading = false;
-      });
+      // setState(() {
+      //   _isLoading = false;
+      // });
 
       if (result != 0) {
         // Registrasi Berhasil
@@ -80,6 +101,7 @@ class RegisterPageState extends State<RegisterPage> {
             child: Center(
               child: SingleChildScrollView(
                 controller: ScrollController(),
+                reverse: false,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

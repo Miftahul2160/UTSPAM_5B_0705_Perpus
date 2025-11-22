@@ -16,9 +16,9 @@ class DBHelper {
     return _database!;
   }
 
-  Future<Database> _initDB(String dbName) async {
+  Future<Database> _initDB(String dbname) async {
     final dbPath = await getDatabasesPath();
-    final path = join(dbPath, dbName);
+    final path = join(dbPath, dbname);
     return await openDatabase(
       path,
       version: 1,
@@ -69,9 +69,10 @@ class DBHelper {
   Future<int> insertUser(User user) async {
     final db = await database;
     try {
-      final id = await db.insert(User.tableUser, user.toMap());
-      return id;
+      return await db.insert
+      (User.tableUser, user.toMap(), conflictAlgorithm: ConflictAlgorithm.fail);
     } on DatabaseException catch (e) {
+      print('gagal insert user: $e');
       // Jika terjadi pelanggaran constraint (mis. UNIQUE), laporkan 0 sebagai gagal
       final err = e.toString();
       if (err.contains('UNIQUE') || err.contains('unique')) {
@@ -82,4 +83,11 @@ class DBHelper {
       return 0;
     }
   }
+  
+    // Debug helper: ambil semua user yang tersimpan (berguna untuk pemeriksaan)
+    Future<List<User>> getAllUsers() async {
+      final db = await database;
+      final maps = await db.query(User.tableUser);
+      return maps.map((m) => User.fromMap(m)).toList();
+    }
 }

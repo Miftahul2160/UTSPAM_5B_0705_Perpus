@@ -18,9 +18,9 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+      // setState(() {
+      //   _isLoading = true;
+      // });
       String identifier = _emailNIKController.text;
       String password = _passwordController.text;
       final user = await DBHelper.instance.authenticate(identifier, password);
@@ -43,9 +43,9 @@ class _LoginPageState extends State<LoginPage> {
           ),
         );
       }
-      setState(() {
-        _isLoading = false;
-      });
+      // setState(() {
+      //   _isLoading = false;
+      // });
     }
   }
 
@@ -59,6 +59,7 @@ class _LoginPageState extends State<LoginPage> {
             padding: const EdgeInsets.all(24.0),
             child: Center(
               child: SingleChildScrollView(
+                reverse: false,
                 controller: ScrollController(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
