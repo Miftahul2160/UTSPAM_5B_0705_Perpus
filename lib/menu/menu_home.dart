@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_library/data/model/book.dart';
 import 'package:flutter_library/data/model/user.dart';
+import 'package:flutter_library/peminjaman.dart';
 
 class MenuHome extends StatefulWidget {
   const MenuHome({super.key, required User activeUser});
@@ -33,61 +34,123 @@ class _MenuHomeState extends State<MenuHome> {
   }
 
   _buildBookCard(BuildContext context, Book book) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(8),
-                topRight: Radius.circular(8),
-              ),
-              child: Image.asset(book.coverImage, fit: BoxFit.cover),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  book.judul,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+    return InkWell(
+      onTap: () {
+        _showSynopsisDialog(context, book);
+      },
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  topRight: Radius.circular(8),
                 ),
-                const SizedBox(height: 4),
+                child: Image.asset(book.coverImage, fit: BoxFit.cover),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    book.judul,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'by ${book.hargaPinjam.toStringAsFixed(0)}/hari',
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PeminjamanPage(selectedBook: book),
+                    ),
+                  );
+                },
+                child: const Text('Pinjam'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showSynopsisDialog(BuildContext context, Book book) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            book.judul,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(book.genre, style: TextStyle(color: Colors.grey.shade600)),
+                const SizedBox(height: 10),
+                const Text(
+                  'Sinopsis Singkat:',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                Text(book.sinopsis), // Menampilkan sinopsis
+                const SizedBox(height: 15),
                 Text(
-                  'by ${book.hargaPinjam.toStringAsFixed(0)}/hari',
-                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  'Harga Pinjam: Rp ${book.hargaPinjam.toStringAsFixed(0)}/hari',
+                  style: const TextStyle(color: Colors.red),
                 ),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('TUTUP'),
               onPressed: () {
-                // Aksi saat tombol dipencet
+                Navigator.of(context).pop();
               },
-              child: const Text('Pinjam'),
             ),
-          ),
-        ],
-      ),
+            TextButton(
+              child: const Text('PINJAM BUKU'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Tutup dialog
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PeminjamanPage(selectedBook: book),
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
