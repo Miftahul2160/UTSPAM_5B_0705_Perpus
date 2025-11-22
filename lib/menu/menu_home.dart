@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_library/booklist.dart';
+import 'package:flutter_library/login.dart';
+import 'package:flutter_library/data/model/user.dart';
+
 
 class MenuHome extends StatelessWidget {
-  const MenuHome({super.key});
+  final User activeUser;
+  const MenuHome({super.key, required this.activeUser});
 
   @override
   Widget build(BuildContext context) {

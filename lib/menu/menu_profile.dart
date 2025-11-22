@@ -12,41 +12,42 @@ class MenuProfile extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-                SizedBox(height: 20),
-                Icon( Icons.person, size: 80, color: Colors.blue),
-                Text( 'Nama Pengguna', 
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  )),
-                SizedBox(height: 10),
-                Text('Email'),
-                SizedBox(height: 20,),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => LoginPage()),
-                          );
-                  },
-                  child: Text('Logout',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                  
+              SizedBox(height: 20),
+              Icon(Icons.person, size: 80, color: Colors.blue),
+              Text(
+                'Nama Pengguna',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
                 ),
-                
+              ),
+              SizedBox(height: 10),
+              Text('Email'),
+              SizedBox(height: 20),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (context) => LoginPage(),
+                    ), // Rute baru
+                    (Route<dynamic> route) =>
+                        false, // Predikat: menghapus semua rute sebelumnya
+                  );
+                },
+                child: Text(
+                  'Logout',
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              ),
             ],
-          )
+          ),
         ),
       ),
     );

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_library/data/model/user.dart';
 import 'package:flutter_library/navbarbottom.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final User activeUser;
+  const HomePage({super.key, required this.activeUser});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -21,7 +23,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               Icon(Icons.person, size: 30, color: Colors.white), 
               SizedBox(width: 10),
-              Text('Username', 
+              Text(widget.activeUser.nama, 
               style: TextStyle(
                 fontSize: 20,
                 color: Colors.white,
@@ -31,10 +33,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: LayoutNavigationBarBottom(
-        
-      )
-      
+      body: LayoutNavigationBarBottom(activeUser: widget.activeUser),
     );
   }
 }

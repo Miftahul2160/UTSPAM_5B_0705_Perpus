@@ -18,9 +18,9 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
-      // setState(() {
-      //   _isLoading = true;
-      // });
+      setState(() {
+        _isLoading = true;
+      });
       String identifier = _emailNIKController.text;
       String password = _passwordController.text;
       final user = await DBHelper.instance.authenticate(identifier, password);
@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
         );
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => HomePage(activeUser: user)),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -43,9 +43,9 @@ class _LoginPageState extends State<LoginPage> {
           ),
         );
       }
-      // setState(() {
-      //   _isLoading = false;
-      // });
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
