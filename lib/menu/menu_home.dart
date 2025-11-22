@@ -4,7 +4,8 @@ import 'package:flutter_library/data/model/user.dart';
 import 'package:flutter_library/peminjaman.dart';
 
 class MenuHome extends StatefulWidget {
-  const MenuHome({super.key, required User activeUser});
+  final User activeUser;
+  const MenuHome({super.key, required this.activeUser});
 
   @override
   State<MenuHome> createState() => _MenuHomeState();
@@ -89,7 +90,7 @@ class _MenuHomeState extends State<MenuHome> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PeminjamanPage(selectedBook: book),
+                      builder: (context) => PeminjamanPage(selectedBook: book, loggedInUser: widget.activeUser),
                     ),
                   );
                 },
@@ -138,12 +139,12 @@ class _MenuHomeState extends State<MenuHome> {
             ),
             TextButton(
               child: const Text('PINJAM BUKU'),
-              onPressed: () {
+                onPressed: () {
                 Navigator.of(context).pop(); // Tutup dialog
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PeminjamanPage(selectedBook: book),
+                    builder: (context) => PeminjamanPage(selectedBook: book, loggedInUser: widget.activeUser),
                   ),
                 );
               },
