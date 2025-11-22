@@ -29,7 +29,7 @@ class Book {
 }
 
 final List<Book> dummyBooks = [
-  Book(id: 1, judul: 'Flutter Fundamentals', genre: 'Technology', hargaPinjam: 5000.0, coverImage:'https://images.unsplash.com/photo-1517058611140-5e5d3c8a91a9?fit=crop&w=300&q=80', sinopsis: 'Dasar-dasar pembuatan aplikasi mobile.'),
-  Book(id: 2, judul: 'Clean Code', genre: 'Software Engineering', hargaPinjam: 7500.0, coverImage:'https://images.unsplash.com/photo-1543818318-7f551c91c3e3?fit=crop&w=300&q=80', sinopsis: 'Panduan menulis kode yang bersih dan mudah dipelihara.'),
-  Book(id: 3, judul: 'The 7 Habits', genre: 'Self-Improvement', hargaPinjam: 4500.0, coverImage:'https://images.unsplash.com/photo-1601327159757-5e9a4f4d2f00?fit=crop&w=300&q=80', sinopsis: 'Kebiasaan efektif untuk kehidupan pribadi dan profesional.'),
+  Book(id: 1, judul: 'Filosofi Teras', genre: 'Filsafat', hargaPinjam: 5000.0, coverImage:'assets/images/coverFilosofiTeras.png', sinopsis: 'Sebuah buku pengantar filsafat Stoa yang dibuat khusus sebagai panduan moral anak muda.'),
+  Book(id: 2, judul: 'Bumi', genre: 'Fantasi', hargaPinjam: 3000.0, coverImage:'assets/images/coverBumi.png', sinopsis: 'Serial ini mengikuti petualangan tiga sahabat, Raib, Seli, dan Ali, yang menemukan dunia paralel dengan teknologi mutakhir, berbeda dengan genre fantasi seperti Harry Potter.'),
+  Book(id: 3, judul: 'Negeri Para Bedebah', genre: 'Komik', hargaPinjam: 4500.0, coverImage:'assets/images/coverNegeriParaBedebah.png', sinopsis: 'Berkisah tentang Thomas, seorang konsultan keuangan brilian yang harus berjuang membersihkan nama baik keluarganya di tengah skandal besar yang mengguncang negeri.'),
 ];

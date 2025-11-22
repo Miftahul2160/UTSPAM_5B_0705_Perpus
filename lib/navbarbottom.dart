@@ -14,7 +14,7 @@ class LayoutNavigationBarBottom extends StatefulWidget {
 }
 
 class LayoutNavigationBarBottomState extends State<LayoutNavigationBarBottom> {
-  int _currentIndex = 0;
+  int _currentIndex = 1;
   // children must be created inside build so we can access `widget` safely
 
   void onBarTapped(int index) {
