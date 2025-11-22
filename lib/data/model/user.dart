@@ -1,3 +1,4 @@
+import 'dart:convert';
 class User {
   static const String tableUser = 'users';
   static const String columnId = '_id';
@@ -11,10 +12,10 @@ class User {
 
   int? id;
   String nama;
-  String nik;
+  int nik;
   String? alamat;
   String username; 
-  String? noTelp;
+  int? noTelp;
   String email;
   String password;
   
@@ -48,12 +49,29 @@ class User {
     return User(
       id: map[columnId],
       nama: map[columnNama],
-      nik: map[columnNik],
+      nik: map[columnNik] is int
+          ? map[columnNik] as int
+          : int.parse(map[columnNik].toString()),
       email: map[columnEmail],
       alamat: map[columAlamat],
       username: map[columnUsername],
-      noTelp: map[columnNoTelp],
+      noTelp: map[columnNoTelp] == null
+          ? null
+          : (map[columnNoTelp] is int
+              ? map[columnNoTelp] as int
+              : int.parse(map[columnNoTelp].toString())),
       password: map[columnPassword],
     );
   }
+
+  String toJson() => json.encode(toMap());
+
+  factory User.fromJson(String source) => User.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'User{id: $id, nama: $nama, nik: $nik, email: $email, alamat: $alamat, username: $username, noTelp: $noTelp}';
+  }
+
+
 }

@@ -21,8 +21,14 @@ class DBHelper {
     final path = join(dbPath, dbname);
     return await openDatabase(
       path,
-      version: 1,
+      version: 3,
       onCreate: _onCreate,
+      onUpgrade: (db, oldVersion, newVersion) async {
+        // Simple upgrade for development: drop and recreate tables.
+        // WARNING: this will erase existing data. Remove/change for production.
+        await db.execute('DROP TABLE IF EXISTS ${User.tableUser}');
+        await _onCreate(db, newVersion);
+      },
     );
   }
 
@@ -49,10 +55,16 @@ class DBHelper {
     final db = await database;
     
     // Identifier bisa berupa Email atau NIK
+    // Jika identifier dapat diparse jadi int, kirim sebagai int untuk NIK
+    final int? nikValue = int.tryParse(identifier);
+    final whereArgs = nikValue != null
+        ? [identifier, nikValue, password]
+        : [identifier, identifier, password];
+
     final List<Map<String, dynamic>> maps = await db.query(
       User.tableUser,
       where: '(${User.columnEmail} = ? OR ${User.columnNik} = ?) AND ${User.columnPassword} = ?',
-      whereArgs: [identifier, identifier, password],
+      whereArgs: whereArgs,
     );
 
     if (maps.isNotEmpty) {

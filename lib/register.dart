@@ -28,13 +28,42 @@ class RegisterPageState extends State<RegisterPage> {
       //   _isLoading = true;
       // });
 
+      // Parse numeric fields (NIK and phone) to integers
+      int parsedNik;
+      int? parsedNoHp;
+      try {
+        parsedNik = int.parse(_nikController.text);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('NIK harus berupa angka tanpa spasi.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+
+      try {
+        // Hapus karakter selain digit sebelum parsing (mengizinkan input +62 atau spasi)
+        final digitsOnly = _noHpController.text.replaceAll(RegExp(r'[^0-9]'), '');
+        parsedNoHp = digitsOnly.isEmpty ? 0 : int.parse(digitsOnly);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Nomor HP harus berupa angka.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+
       final newUser = User(
         nama: _namaController.text,
-        nik: _nikController.text,
+        nik: parsedNik,
         email: _emailController.text,
         alamat: _alamatController.text,
         username: _usernameController.text,
-        noTelp: _noHpController.text,
+        noTelp: parsedNoHp,
         password: _passwordController.text,
       );
 
