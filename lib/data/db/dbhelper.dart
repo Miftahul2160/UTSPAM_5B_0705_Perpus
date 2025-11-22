@@ -64,5 +64,22 @@ class DBHelper {
     return null;
   }
   
-  // TODO: Tambahkan fungsi insertUser untuk Registrasi.
+  // Insert user untuk registrasi
+  // Mengembalikan id baris yang diinsert (>=1) jika sukses, atau 0 jika gagal
+  Future<int> insertUser(User user) async {
+    final db = await database;
+    try {
+      final id = await db.insert(User.tableUser, user.toMap());
+      return id;
+    } on DatabaseException catch (e) {
+      // Jika terjadi pelanggaran constraint (mis. UNIQUE), laporkan 0 sebagai gagal
+      final err = e.toString();
+      if (err.contains('UNIQUE') || err.contains('unique')) {
+        return 0;
+      }
+      rethrow;
+    } catch (e) {
+      return 0;
+    }
+  }
 }

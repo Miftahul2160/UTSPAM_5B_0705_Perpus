@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_library/login.dart';
+import 'package:flutter_library/data/db/dbhelper.dart';
+import 'package:flutter_library/data/model/user.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -18,6 +20,55 @@ class RegisterPageState extends State<RegisterPage> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _globalKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+
+  Future<void> _handleRegister() async {
+    if (_globalKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      final newUser = User(
+        nama: _namaController.text,
+        nik: _nikController.text,
+        email: _emailController.text,
+        alamat: _alamatController.text,
+        username: _usernameController.text,
+        noTelp: _noHpController.text,
+        password: _passwordController.text,
+      );
+
+      // --- Panggil Fungsi Insert User ke SQFLite ---
+      // Asumsikan DBHelper memiliki fungsi `insertUser`
+      final result = await DBHelper.instance.insertUser(newUser);
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (result != 0) {
+        // Registrasi Berhasil
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registrasi berhasil! Silakan login.')),
+        );
+        // Navigasi ke Halaman Login (Menutup Registrasi)
+        Navigator.of(
+          context,
+        ).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
+      } else {
+        // Registrasi Gagal (mungkin NIK/Email sudah ada)
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Registrasi gagal. Email atau NIK mungkin sudah terdaftar.',
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -207,21 +258,18 @@ class RegisterPageState extends State<RegisterPage> {
                           color: Colors.white,
                         ),
                       ),
-                      onPressed: () {
-                        if (_globalKey.currentState!.validate()) {
-                          // Proses pendaftaran jika semua input valid
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Pendaftaran berhasil!')),
-                          );
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoginPage(),
-                            ), // Menumpuk ke Halaman tujuan
-                          );
-                        }
-                      },
-                      child: Text('Daftar'),
+                      onPressed: _isLoading ? null : _handleRegister,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: _isLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : const Text(
+                                'DAFTAR',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                      ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
