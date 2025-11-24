@@ -1,7 +1,9 @@
 # flutter_library
 
-Projek flutter membuat aplikasi perpustakaan 
+Projek flutter membuat aplikasi perpustakaan
 
+Video screen record aplikasi
+(https://raw.githubusercontent.com/Miftahul2160/UTSPAM_5B_0705_Perpus/main/assets/documentation/record.mp4)
 ## Getting Started
 
 This project is a starting point for a Flutter application.
