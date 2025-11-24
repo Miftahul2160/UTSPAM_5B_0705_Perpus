@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_library/login.dart';
+import 'package:flutter_library/data/db/dbhelper.dart';
 // import 'package:flutter_library/navbarbottom.dart';
 // import 'package:flutter_library/register.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Seed dummy books into the database if empty
-
+  await DBHelper.instance.seedDummyBooks();
   runApp(const MyApp());
 }
 

@@ -63,7 +63,6 @@ class DBHelper {
       )
     ''');
 
-    await insertBooks(dummyBooks);
     // Tabel buku
     await db.execute('''
       CREATE TABLE IF NOT EXISTS books (
@@ -213,7 +212,21 @@ class DBHelper {
     return maps.map((m) => Book.fromMap(m)).toList();
   }
 
-  /// Jika tabel buku kosong, masukkan data dari `dummyBooks`.
+  Future<Book?> getBookByTitle(String title) async {
+    final db = await database;
+    final maps = await db.query(
+      Book.tableBook,
+      where: '${Book.columnJudul} = ?',
+      whereArgs: [title],
+      limit: 1,
+    );
+    if (maps.isNotEmpty) {
+      return Book.fromMap(maps.first);
+    }
+    return null;
+  }
+
+  //Jika tabel buku kosong, masukkan data dari `dummyBooks`.
   Future<void> seedDummyBooks() async {
     final db = await database;
     final List<Map<String, Object?>> countResult =

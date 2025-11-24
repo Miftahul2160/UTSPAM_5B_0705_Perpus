@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_library/data/model/book.dart';
 import 'package:flutter_library/edit_pinjaman.dart';
 import 'package:flutter_library/menu/menu_historybooks.dart';
+import 'package:flutter_library/data/db/dbhelper.dart';
 // import 'data/model/book.dart';
 
 import 'data/model/transaction.dart';
@@ -95,9 +97,14 @@ Widget _buildDetailRow(String label, String value, {Color? valueColor}) {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
     final formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
-    return Scaffold(
+    return FutureBuilder<Book?>(
+      future: DBHelper.instance.getBookByTitle(_currentTransaction.judulBuku),
+      builder: (context, snapshot) {
+        final Book? book = snapshot.data;
+        return Scaffold(
       appBar: AppBar(
         title: const Text('Detail Peminjaman'),
         // Tombol kembali yang menutup halaman detail
@@ -130,7 +137,7 @@ Widget _buildDetailRow(String label, String value, {Color? valueColor}) {
             ),
             const Divider(height: 30),
 
-            // --- Cover Buku (Placeholder) ---
+            // --- Cover Buku (Placeholder or loaded from DB) ---
             Center(
               child: Container(
                 height: 200,
@@ -140,7 +147,18 @@ Widget _buildDetailRow(String label, String value, {Color? valueColor}) {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Center(
-                  child: Icon(Icons.book, size: 96, color: Colors.grey[600]),
+                  child: snapshot.connectionState == ConnectionState.waiting
+                      ? const CircularProgressIndicator()
+                      : (book != null && book.coverImage.isNotEmpty
+                          ? Image.asset(book.coverImage, fit: BoxFit.cover)
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(Icons.menu_book, size: 72, color: Colors.grey),
+                                SizedBox(height: 8),
+                                Text('Cover tidak tersedia'),
+                              ],
+                            )),
                 ),
               ),
             ),
@@ -198,6 +216,8 @@ Widget _buildDetailRow(String label, String value, {Color? valueColor}) {
           ],
         ),
       ),
+    );
+      },
     );
   }
 }

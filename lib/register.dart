@@ -292,17 +292,14 @@ class RegisterPageState extends State<RegisterPage> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 50,
-                          vertical: 15,
-                        ),
-                        backgroundColor: Colors.blueAccent,
+                       backgroundColor: Colors.blueAccent,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
+                        minimumSize: Size(double.infinity, 50),
                         textStyle: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
