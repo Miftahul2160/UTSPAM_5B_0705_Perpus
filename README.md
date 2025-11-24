@@ -1,7 +1,18 @@
 # flutter_library
 
 Projek flutter membuat aplikasi perpustakaan
-
+Fitur yang ada berupa
+- Register
+- Login
+- HomePage
+- Daftar Buku
+- Peminjaman
+- Edit Pinjaman
+- Navbar
+- History Peminjaman
+- Akun
+- Logout
+- 
 Video screen record aplikasi
 (https://raw.githubusercontent.com/Miftahul2160/UTSPAM_5B_0705_Perpus/main/assets/documentation/record.mp4)
 
