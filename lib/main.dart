@@ -3,7 +3,10 @@ import 'package:flutter_library/login.dart';
 // import 'package:flutter_library/navbarbottom.dart';
 // import 'package:flutter_library/register.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Seed dummy books into the database if empty
+
   runApp(const MyApp());
 }
 

@@ -8,12 +8,12 @@ class Transaction {
   static const String columnTotalBiaya = 'total_biaya';
   static const String columnStatus = 'status';
   
-  final int? id;
-  final String judulBuku;
-  final String namaPeminjam;
-  final int durasiPinjam;
-  final DateTime tanggalPinjam;
-  final double totalBiaya;
+  int? id;
+  String judulBuku;
+  String namaPeminjam;
+  int durasiPinjam;
+  DateTime tanggalPinjam;
+  double totalBiaya;
   String status;
 
   Transaction({
@@ -41,7 +41,7 @@ class Transaction {
 
 factory Transaction.fromMap(Map<String, dynamic> map) {
     return Transaction(
-      id: map[columnId] is int ? map[columnId] as int : (map[columnId] == null ? null : int.parse(map[columnId].toString())),
+      id: map[columnId],
       judulBuku: map[columnJudulBuku].toString(),
       namaPeminjam: map[columnNamaPeminjam].toString(),
       durasiPinjam: map[columnDurasiPinjam] is int ? map[columnDurasiPinjam] as int : int.parse(map[columnDurasiPinjam].toString()),
@@ -49,7 +49,7 @@ factory Transaction.fromMap(Map<String, dynamic> map) {
       totalBiaya: (map[columnTotalBiaya] is double)
           ? map[columnTotalBiaya] as double
           : double.parse(map[columnTotalBiaya].toString()),
-      status: map[columnStatus].toString(),
+      status: map[columnStatus].toString()
     );
   }
 }

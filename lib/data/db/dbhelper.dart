@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart' hide Transaction;
 import 'package:path/path.dart';
 import '../model/user.dart';
 import '../model/transaction.dart';
+import '../model/book.dart';
 
 class DBHelper {
   static const String dbname = 'library.db';
@@ -29,6 +30,7 @@ class DBHelper {
         await db.execute(
           'DROP TABLE IF EXISTS ${Transaction.tableTransaction}',
         );
+        await db.execute('DROP TABLE IF EXISTS ${Book.tableBook}');
         await _onCreate(db, newVersion);
       },
     );
@@ -37,7 +39,7 @@ class DBHelper {
   Future _onCreate(Database db, int version) async {
     // Membuat tabel pengguna
     await db.execute('''
-      CREATE TABLE ${User.tableUser} (
+      CREATE TABLE IF NOT EXISTS ${User.tableUser} (
         ${User.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,
         ${User.columnNama} TEXT NOT NULL,
         ${User.columnNik} INTEGER NOT NULL,
@@ -50,7 +52,7 @@ class DBHelper {
     ''');
 
     await db.execute('''
-      CREATE TABLE ${Transaction.tableTransaction} (
+      CREATE TABLE IF NOT EXISTS ${Transaction.tableTransaction} (
         ${Transaction.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,
         ${Transaction.columnJudulBuku} TEXT NOT NULL,
         ${Transaction.columnNamaPeminjam} TEXT NOT NULL,
@@ -61,7 +63,18 @@ class DBHelper {
       )
     ''');
 
-    // TODO: Tambahkan tabel 'Buku' dan 'Transaksi' di sini.
+    await insertBooks(dummyBooks);
+    // Tabel buku
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS books (
+        ${Book.columnId} INTEGER PRIMARY KEY,
+        ${Book.columnCover} TEXT NOT NULL,
+        ${Book.columnJudul} TEXT NOT NULL,
+        ${Book.columnGenre} TEXT NOT NULL,
+        ${Book.columnHargaPinjam} REAL NOT NULL,
+        ${Book.columnSinopsis} TEXT NOT NULL
+      )
+    ''');
   }
 
   // --- FUNGSI UTAMA AUTENTIKASI ---
@@ -173,4 +186,46 @@ class DBHelper {
       whereArgs: [transaction.id],
     );
   }
+
+  // ----------------- BOOK CRUD & SEEDING -----------------
+  Future<int> insertBook(Book book) async {
+    final db = await database;
+    return await db.insert(
+      Book.tableBook,
+      book.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<int> insertBooks(List<Book> books) async {
+    final db = await database;
+    final batch = db.batch();
+    for (final b in books) {
+      batch.insert(Book.tableBook, b.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+    }
+    await batch.commit(noResult: true);
+    return books.length;
+  }
+
+  Future<List<Book>> getAllBooks() async {
+    final db = await database;
+    final maps = await db.query(Book.tableBook, orderBy: '${Book.columnId} ASC');
+    return maps.map((m) => Book.fromMap(m)).toList();
+  }
+
+  /// Jika tabel buku kosong, masukkan data dari `dummyBooks`.
+  Future<void> seedDummyBooks() async {
+    final db = await database;
+    final List<Map<String, Object?>> countResult =
+        await db.rawQuery('SELECT COUNT(*) as cnt FROM ${Book.tableBook}');
+    final int count = countResult.isNotEmpty
+        ? (countResult.first['cnt'] is int
+            ? countResult.first['cnt'] as int
+            : int.parse(countResult.first['cnt'].toString()))
+        : 0;
+    if (count == 0) {
+      await insertBooks(dummyBooks);
+    }
+  }
+  
 }

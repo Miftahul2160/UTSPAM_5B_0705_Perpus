@@ -1,53 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_library/login.dart';
+import 'package:flutter_library/data/model/user.dart';
 
 class MenuProfile extends StatelessWidget {
-  const MenuProfile({super.key});
+  final User activeUser;
+  const MenuProfile({super.key, required this.activeUser});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 20),
-              Icon(Icons.person, size: 80, color: Colors.blue),
-              Text(
-                'Nama Pengguna',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(height: 20),
+            const Icon(Icons.person, size: 80, color: Colors.blue),
+            const SizedBox(height: 12),
+            Text(
+              activeUser.nama,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(activeUser.email),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              SizedBox(height: 10),
-              Text('Email'),
-              SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+              onPressed: () {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(),
                   ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => LoginPage(),
-                    ), // Rute baru
-                    (Route<dynamic> route) =>
-                        false, // Predikat: menghapus semua rute sebelumnya
-                  );
-                },
-                child: Text(
-                  'Logout',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
+                  (Route<dynamic> route) => false,
+                );
+              },
+              child: const Text(
+                'Logout',
+                style: TextStyle(fontSize: 16, color: Colors.white),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

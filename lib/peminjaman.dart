@@ -88,7 +88,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
         _isLoading = true;
       });
 
-      // 1. Buat objek Transaksi baru sesuai model Transaction di project
+      // 1. Buat objek Transaksi baru
       final newTransaction = Transaction(
         judulBuku: _judulBuku,
         namaPeminjam: _user.nama,
@@ -98,25 +98,36 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
         status: 'Aktif',
       );
 
-      // 2. Simpan data transaksi ke SQFLite
-      final newId = await DBHelper.instance.insertTransaction(newTransaction);
-      
-      setState(() {
-        _isLoading = false;
-      });
+      try {
+        debugPrint('Attempting to insert transaction: $newTransaction');
+        final newId = await DBHelper.instance.insertTransaction(newTransaction);
+        debugPrint('Insert returned id: $newId');
 
-      if (newId > 0) {
+        if (newId > 0) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Peminjaman berhasil disimpan!')),
+          );
+          // Navigasi ke Halaman Riwayat Sewa
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => MenuHistoryBook()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Gagal menyimpan transaksi ke database.'), backgroundColor: Colors.red),
+          );
+        }
+      } catch (e, st) {
+        debugPrint('Error inserting transaction: $e');
+        debugPrint(st.toString());
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Peminjaman berhasil disimpan!')),
+          SnackBar(content: Text('Terjadi error: $e'), backgroundColor: Colors.red),
         );
-        // 3. Navigasi ke Halaman Riwayat Sewa
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => MenuHistoryBook()),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Gagal menyimpan transaksi ke database.'), backgroundColor: Colors.red),
-        );
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

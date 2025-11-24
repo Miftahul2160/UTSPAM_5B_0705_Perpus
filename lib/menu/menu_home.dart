@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_library/data/model/book.dart';
+import 'package:flutter_library/data/db/dbhelper.dart';
 import 'package:flutter_library/data/model/user.dart';
 import 'package:flutter_library/peminjaman.dart';
 
@@ -14,21 +15,35 @@ class MenuHome extends StatefulWidget {
 class _MenuHomeState extends State<MenuHome> {
   @override
   Widget build(BuildContext context) {
-    final books = dummyBooks;
     return Scaffold(
       appBar: AppBar(title: const Text('Daftar Buku Rekomendasi')),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(10.0),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // Menampilkan 2 kolom
-          childAspectRatio: 0.65, // Rasio lebar/tinggi kartu
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-        ),
-        itemCount: books.length,
-        itemBuilder: (context, index) {
-          final book = books[index];
-          return _buildBookCard(context, book);
+      body: FutureBuilder<List<Book>>(
+        future: DBHelper.instance.getAllBooks(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error memuat buku: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('Belum ada buku tersedia.'));
+          }
+
+          final books = snapshot.data!;
+
+          return GridView.builder(
+            padding: const EdgeInsets.all(10.0),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, // Menampilkan 2 kolom
+              childAspectRatio: 0.65, // Rasio lebar/tinggi kartu
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+            ),
+            itemCount: books.length,
+            itemBuilder: (context, index) {
+              final book = books[index];
+              return _buildBookCard(context, book);
+            },
+          );
         },
       ),
     );
