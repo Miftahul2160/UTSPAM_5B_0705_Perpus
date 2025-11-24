@@ -12,8 +12,8 @@ Fitur yang ada berupa
 - History Peminjaman
 - Akun
 - Logout
-- 
-Video screen record aplikasi
+- Video screen record aplikasi
+
 (https://raw.githubusercontent.com/Miftahul2160/UTSPAM_5B_0705_Perpus/main/assets/documentation/record.mp4)
 
 ## Getting Started
